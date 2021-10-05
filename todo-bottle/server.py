@@ -13,9 +13,9 @@ db.connect("todo.db")
 def task_get(task_id=None):
     """ Fetch a single task or fetch all tasks.
     :return: jsend JSON object with key 'data' containing a single or a list of tasks
-    response 200 OK - response data contains task(s) content
-             404 Not Found - task task_id not found, response message contains error
-             500 Server Internal Error - most likely database error, response contains detailed error information
+    response 200 OK - response data has content
+             404 Not Found - task task_id not found
+             500 Server Internal Error - most likely database error
     """
     response.headers["Content-Type"] = "application/json"
     response.headers["Cache-Control"] = "no-cache"
@@ -42,11 +42,11 @@ def task_get(task_id=None):
 def task_put(task_id=None):
     """ Update a single task. Updating all tasks not supported.
     :return: jsend JSON object with key 'data' containing the task_id of the updated task
-    response 200 OK - task updated successfully, response data contains task_id
-             400 Bad Request - no JSON content in request
-             404 Not Found - task task_id not found, response message contains error
-             405 Method Not Allowed - PUT on collection not supported
-             500 Server Internal Error - most likely database error, response contains detailed error information
+    response 200 OK - task updated successfully
+             400 no JSON content in request
+             404 Not Found - task task_id not found
+             405 PUT on collection not supported
+             500 Server Internal Error - most likely database error
     """
     response.headers["Content-Type"] = "application/json"
     try:
@@ -77,10 +77,10 @@ def task_put(task_id=None):
 def task_post(task_id=None):
     """ Insert a new task.
     :return: jsend JSON object with key 'data' containing the task_id of newly created task
-    response 201 Created - task inserted, response data contains new task task_id
-             400 Bad Request - no JSON content in request
-             405 Method Not Allowed - insert with predefined task_id not possible
-             500 Server Internal Error - most likely database error, response contains detailed error information
+    response 201 Created - task inserted
+             400 No JSON content in request
+             405 insert with predefined task_id not possible
+             500 Server Internal Error - most likely database error
     """
     response.headers["Content-Type"] = "application/json"
     try:
@@ -106,10 +106,10 @@ def task_post(task_id=None):
 def task_delete(task_id=None):
     """ Delete a single task. Deleting all tasks is not supported.
     :return: jsend JSON object with key 'data' containing the content of the deleted task
-    response: 200 OK - task deleted successfully, response data contains deleted tasks content
-              404 Not Found - task task_id not found, response message contains error
-              405 Method Not Allowed - delete on collection not supported
-              500 Server Internal Error - most likely database error, response contains detailed error information
+    response: 200 OK - task deleted successfully
+              404 task task_id not found
+              405 delete on collection not supported
+              500 Server Internal Error - most likely database error
     """
     response.headers["Content-Type"] = "application/json"
     try:
