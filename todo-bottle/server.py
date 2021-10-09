@@ -1,11 +1,28 @@
-from bottle import Bottle, request, response
+from bottle import Bottle, request, response, route, hook
+from bottle_cors_plugin import cors_plugin
 
 import db
 import jsend
 
 app = Bottle()
-
 db.connect("todo.db")
+
+_allow_origin = '*'
+_allow_methods = 'PUT, GET, POST, DELETE, OPTIONS'
+_allow_headers = 'Authorization, Origin, Accept, Content-Type, X-Requested-With'
+
+@app.hook('after_request')
+def enable_cors():
+    '''Add headers to enable CORS'''
+
+    response.headers['Access-Control-Allow-Origin'] = _allow_origin
+    response.headers['Access-Control-Allow-Methods'] = _allow_methods
+    response.headers['Access-Control-Allow-Headers'] = _allow_headers
+
+@app.route('/', method = 'OPTIONS')
+@app.route('/<path:path>', method = 'OPTIONS')
+def options_handler(path = None):
+    return
 
 
 @app.get("/task")
@@ -17,8 +34,11 @@ def task_get(task_id=None):
              404 Not Found - task task_id not found
              500 Server Internal Error - most likely database error
     """
-    response.headers["Content-Type"] = "application/json"
+    response.content_type = "application/json"
     response.headers["Cache-Control"] = "no-cache"
+    # response.headers['Access-Control-Allow-Origin'] = '*'
+    # response.headers['Access-Control-Allow-Methods'] = 'PUT, GET, POST, DELETE, OPTIONS'
+    # response.headers['Access-Control-Allow-Headers'] = 'Origin, Accept, Content-Type, X-Requested-With, X-CSRF-Token'
     try:
         if task_id is None:
             tasks = db.task.select()
@@ -48,7 +68,10 @@ def task_put(task_id=None):
              405 PUT on collection not supported
              500 Server Internal Error - most likely database error
     """
-    response.headers["Content-Type"] = "application/json"
+    response.content_type = "application/json"
+    # response.headers['Access-Control-Allow-Origin'] = '*'
+    # response.headers['Access-Control-Allow-Methods'] = 'PUT, GET, POST, DELETE, OPTIONS'
+    # response.headers['Access-Control-Allow-Headers'] = 'Origin, Accept, Content-Type, X-Requested-With, X-CSRF-Token'
     try:
         if task_id is None:
             response.status = 405
@@ -82,7 +105,10 @@ def task_post(task_id=None):
              405 insert with predefined task_id not possible
              500 Server Internal Error - most likely database error
     """
-    response.headers["Content-Type"] = "application/json"
+    response.content_type = "application/json"
+    # response.headers['Access-Control-Allow-Origin'] = 'http://localhost:8080/'
+    # response.headers['Access-Control-Allow-Methods'] = 'PUT, GET, POST, DELETE, OPTIONS'
+    # response.headers['Access-Control-Allow-Headers'] = 'Origin, Accept, Content-Type, X-Requested-With, X-CSRF-Token'
     try:
         if task_id is None:
             data = request.json
@@ -111,7 +137,10 @@ def task_delete(task_id=None):
               405 delete on collection not supported
               500 Server Internal Error - most likely database error
     """
-    response.headers["Content-Type"] = "application/json"
+    response.content_type = "application/json"
+    # response.headers['Access-Control-Allow-Origin'] = '*'
+    # response.headers['Access-Control-Allow-Methods'] = 'PUT, GET, POST, DELETE, OPTIONS'
+    # response.headers['Access-Control-Allow-Headers'] = 'Origin, Accept, Content-Type, X-Requested-With, X-CSRF-Token'
     try:
         if task_id is None:
             response.status = 405
@@ -131,4 +160,4 @@ def task_delete(task_id=None):
 
 
 if __name__ == "__main__":
-    app.run(host="127.0.0.10", port=8080, debug=True, reloader=True)
+    app.run(host="127.0.0.1", port=8000, debug=True, reloader=True)
