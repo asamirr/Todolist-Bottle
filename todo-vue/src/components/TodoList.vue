@@ -34,7 +34,7 @@ export default {
     },
 
     mounted(){
-        Vue.axios.get('http://127.0.0.1:8000/task')
+        Vue.axios.get('http://localhost:5000/task')
         .then((resp)=>{
             this.list=resp.data.data;
             console.warn(resp.data.data)

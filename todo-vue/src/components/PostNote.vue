@@ -32,7 +32,7 @@ export default {
 
     methods:{
         postData(e){
-            this.axios.post("http://localhost:8000/task", this.tasks)
+            this.axios.post("http://localhost:5000/task", this.tasks)
             .then((result)=>{
                 console.warn(result)
             })
