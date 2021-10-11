@@ -32,7 +32,7 @@ export default {
 
     methods:{
         postData(e){
-            this.axios.post("http://localhost:5000/task", this.tasks)
+            this.axios.post(process.env.VUE_APP_BASE_URL, this.tasks)
             .then((result)=>{
                 console.warn(result)
             })

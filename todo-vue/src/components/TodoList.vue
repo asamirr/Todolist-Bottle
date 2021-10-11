@@ -34,7 +34,7 @@ export default {
     },
 
     mounted(){
-        Vue.axios.get('http://localhost:5000/task')
+        Vue.axios.get(process.env.VUE_APP_BASE_URL)
         .then((resp)=>{
             this.list=resp.data.data;
             console.warn(resp.data.data)
