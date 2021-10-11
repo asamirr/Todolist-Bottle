@@ -1,0 +1,16 @@
+version: '3.8'
+# Define services
+services:
+  # App backend service
+  backend:
+    # Configuration for building the docker image for the backend service
+    build: ./todo-bottle
+    ports:
+      - "5000:8000"
+  # Frontend Service
+  client:
+    build: ./todo-vue
+    ports:
+      - "3000:8080"
+    depends_on:
+      - backend
