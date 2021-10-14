@@ -8,7 +8,7 @@ spec:
   ports:
   - protocol: "TCP"
     port: 3000
-    targetPort: 3000
+    targetPort: 8080
   type: LoadBalancer
 
 ---
@@ -31,4 +31,4 @@ spec:
         image: asamirr/todo-client:v1
         imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: 3000
+        - containerPort: 8080

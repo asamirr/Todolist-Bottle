@@ -7,8 +7,8 @@ spec:
     app: bottle-app
   ports:
   - protocol: "TCP"
-    port: 6000
-    targetPort: 5000
+    port: 5000
+    targetPort: 8000
   type: LoadBalancer
 
 ---
@@ -31,4 +31,4 @@ spec:
         image: asamirr/todo-backend:v1
         imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: 5000
+        - containerPort: 8000
