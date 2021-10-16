@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
       - name: bottle-app
-        image: asamirr/todo-backend:v2
+        image: asamirr/todo-backend:v3
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8000
