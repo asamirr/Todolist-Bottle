@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
       - name: vue-app
-        image: asamirr/todo-client:v1
+        image: asamirr/todo-client:v2
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
