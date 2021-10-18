@@ -1,30 +1,30 @@
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: dbnew-pv
-  labels:
-    type: local
-spec:
-  capacity:
-    storage: 1Gi
-  storageClassName: standard
-  accessModes:
-    - ReadWriteOnce
-  hostPath:
-    path: "/home/docker/data"
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   name: dbnew-pv
+#   labels:
+#     type: local
+# spec:
+#   capacity:
+#     storage: 1Gi
+#   storageClassName: standard
+#   accessModes:
+#     - ReadWriteOnce
+#   hostPath:
+#     path: "/home/docker/data"
 
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: dbnew-pvc
-  labels:
-    type: local
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
-  volumeName: dbnew-pv
-  storageClassName: standard
+# ---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: dbnew-pvc
+#   labels:
+#     type: local
+# spec:
+#   accessModes:
+#     - ReadWriteOnce
+#   resources:
+#     requests:
+#       storage: 1Gi
+#   volumeName: dbnew-pv
+#   storageClassName: standard
