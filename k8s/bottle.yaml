@@ -28,7 +28,16 @@ spec:
     spec:
       containers:
       - name: bottle-app
-        image: asamirr/todo-backend:v3
+        image: asamirr/todo-backend:kube-v7
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8000
+        volumeMounts:
+          - name: db-volume
+            mountPath: /db
+
+      volumes:
+      - name: db-volume
+        hostPath:
+          path: /db
+          type: DirectoryOrCreate

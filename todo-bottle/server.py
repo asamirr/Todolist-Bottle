@@ -5,7 +5,7 @@ import db
 import jsend
 
 app = Bottle()
-db.connect("todo.db")
+db.connect("/db/todo.db")
 
 _allow_origin = '*'
 _allow_methods = 'PUT, GET, POST, DELETE, OPTIONS'
