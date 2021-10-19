@@ -11,8 +11,8 @@ image:
   tag: ""
 
 imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: ""
+nameOverride: "todo-app-chart"
+fullnameOverride: "todo-app-chart"
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -37,24 +37,8 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
-  type: ClusterIP
+  type: LoadBalancer
   port: 80
-
-ingress:
-  enabled: false
-  className: ""
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-  hosts:
-    - host: chart-example.local
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -80,3 +64,52 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+volume:
+  name: db-volume
+  labelType: local
+  storage: 1Gi
+  storageClassName: standard
+  accessModes: ReadWriteOnce
+  hostPath: /db
+  mountPath: /db
+  type: DirectoryOrCreate
+
+ingress:
+  name: todo-ingress
+  host: ahmed.to
+  paths: [
+  {
+    "path": /,
+    "pathType": Prefix,
+    "serviceName": vue-service,
+    "servicePort": 3000
+  },
+  {
+    "path": /task,
+    "pathType": Prefix,
+    "serviceName": bottle-service,
+    "servicePort": 5000
+  }]
+
+vue:
+  name: vue
+  label: vue
+  replicas: 1
+  image: asamirr/todo-client:v3
+  pullPolicy: IfNotPresent
+  restartPolicy: Always
+  targetPort: 8080
+  port: 3000
+
+bottle:
+  name: bottle
+  label: bottle
+  replicas: 1
+  image: asamirr/todo-backend:kube-v7
+  pullPolicy: IfNotPresent
+  restartPolicy: Always
+  targetPort: 8000
+  port: 5000
+  serviceType: ClusterIP
+

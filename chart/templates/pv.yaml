@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ .Values.volume.name }}-pv
+  labels:
+    type: {{ .Values.volume.labelType }}
+spec:
+  capacity:
+    storage: {{ .Values.volume.storage }}
+  storageClassName: {{ .Values.volume.storageClassName }}
+  accessModes:
+    - {{ .Values.volume.accessModes }}
+  hostPath:
+    path: {{ .Values.volume.hostPath }}
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.volume.name }}-pvc
+  labels:
+    type: {{ .Values.volume.labelType }}
+spec:
+  accessModes:
+    - {{ .Values.volume.accessModes }}
+  resources:
+    requests:
+      storage: {{ .Values.volume.storage }}
+  volumeName: {{ .Values.volume.name }}-pv
+  storageClassName: {{ .Values.volume.storageClassName }}
