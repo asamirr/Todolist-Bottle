@@ -20,7 +20,7 @@ metadata:
     service: {{ .Values.bottle.name }}
 spec:
   selector:
-    app: {{ .Values.bottle.name }}
+    app: {{ .Values.bottle.label }}
   ports:
   - port: {{ .Values.bottle.port }}
     targetPort: {{ .Values.bottle.targetPort }}

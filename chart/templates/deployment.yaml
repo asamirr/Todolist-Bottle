@@ -48,4 +48,6 @@ spec:
       - name: {{ .Values.vue.name }}
         image: {{ .Values.vue.image }}
         imagePullPolicy: {{ .Values.vue.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.vue.targetPort }}
       restartPolicy: {{ .Values.vue.restartPolicy }}
