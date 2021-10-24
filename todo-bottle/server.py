@@ -1,11 +1,15 @@
 from bottle import Bottle, request, response, route, hook
 from bottle_cors_plugin import cors_plugin
+from beaker.middleware import SessionMiddleware
 
+from auth3 import auth3bot
 import db
 import jsend
 
 app = Bottle()
-db.connect("/db/todo.db")
+db.connect("todo.db")
+
+_session_opts = {"session.type": "file", "session.data_dir": "./data", "session.auto": True}
 
 _allow_origin = '*'
 _allow_methods = 'PUT, GET, POST, DELETE, OPTIONS'
@@ -27,6 +31,7 @@ def options_handler(path = None):
 
 @app.get("/task")
 @app.get("/task/<task_id:int>")
+@auth3bot.is_auth
 def task_get(task_id=None):
     """ Fetch a single task or fetch all tasks.
     :return: jsend JSON object with key 'data' containing a single or a list of tasks
@@ -159,5 +164,7 @@ def task_delete(task_id=None):
         return jsend.error("DELETE task failed", code=type(e).__name__, data=str(e))
 
 
+app = SessionMiddleware(app, _session_opts)
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8000, debug=True, reloader=True)
+    app.app.run(host="0.0.0.0", port=8000, debug=True, reloader=True)
