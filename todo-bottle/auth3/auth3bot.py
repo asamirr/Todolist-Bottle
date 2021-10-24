@@ -44,28 +44,16 @@ def callback():
     session = get_session()
     data = request.query.get("signedAttempt")
     res = requests.post(f"{OAUTH_URL}/verify", data={"signedAttempt": data, "state": session.get("state")})
+    session['authorized'] = True
     res.raise_for_status()
-    return redirect('http://localhost:8080/task')
+    return redirect('http://localhost:8000/task')
 
 
 def is_auth(func):
     def wrapper(*args):
         session = get_session()
-        import pdb; pdb.set_trace()
         if not session.get("authorized","") :
-            state = str(uuid4()).replace("-", "")
-            res = requests.get(f"{OAUTH_URL}/pubkey")
-            res.raise_for_status()
-            data = res.json()
-            params = {
-                "state": state,
-                "appid": request.get_header("host"),
-                "scope": json.dumps({"user": True, "email": True}),
-                "redirecturl": "/callback",
-                "publickey": data["publickey"].encode(),
-            }
-            params = urlencode(params)
-            return redirect(f"{REDIRECT_URL}?{params}", code=302)
+            return redirect(f"http://localhost:8787/start", code=302)
         else:
             func(*args)
     return wrapper

@@ -1,15 +1,72 @@
-from bottle import Bottle, request, response, route, hook
+from bottle import Bottle, request, response, route, hook, run
 from bottle_cors_plugin import cors_plugin
 from beaker.middleware import SessionMiddleware
 
-from auth3 import auth3bot
 import db
 import jsend
+import requests
+import os
+from bottle import Bottle, redirect, request, run
+from urllib.parse import urlencode
+import json
+from beaker.middleware import SessionMiddleware
+from uuid import uuid4
+
+from requests.sessions import session
+
+OAUTH_URL = "http://127.0.0.1:9000" # from the server running from proxy_server_3bot.py
+REDIRECT_URL = "https://login.threefold.me"
+
+
 
 app = Bottle()
 db.connect("todo.db")
 
 _session_opts = {"session.type": "file", "session.data_dir": "./data", "session.auto": True}
+
+
+def get_session():
+    return request.environ.get("beaker.session")
+
+
+@app.route("/start")
+def start():
+    state = str(uuid4()).replace("-", "")
+    session = get_session()
+    session["state"] = state
+    res = requests.get(f"{OAUTH_URL}/pubkey")
+    res.raise_for_status()
+    data = res.json()
+    params = {
+        "state": state,
+        "appid": request.get_header("host"),
+        "scope": json.dumps({"user": True, "email": True}),
+        "redirecturl": "/callback",
+        "publickey": data["publickey"].encode(),
+    }
+    params = urlencode(params)
+    return redirect(f"{REDIRECT_URL}?{params}", code=302)
+
+
+@app.route("/callback")
+def callback():
+    session = get_session()
+    data = request.query.get("signedAttempt")
+    res = requests.post(f"{OAUTH_URL}/verify", data={"signedAttempt": data, "state": session.get("state")})
+    res.raise_for_status()
+    session['authorized'] = True
+    return redirect('http://localhost:8080/')
+
+
+def is_auth(func):
+    def wrapper(*args):
+        session = get_session()
+        if not session.get("authorized","") :
+            return redirect(f"http://localhost:8000/start", code=302)
+        else:
+            return func(*args)
+    return wrapper
+
 
 _allow_origin = '*'
 _allow_methods = 'PUT, GET, POST, DELETE, OPTIONS'
@@ -31,7 +88,7 @@ def options_handler(path = None):
 
 @app.get("/task")
 @app.get("/task/<task_id:int>")
-@auth3bot.is_auth
+@is_auth
 def task_get(task_id=None):
     """ Fetch a single task or fetch all tasks.
     :return: jsend JSON object with key 'data' containing a single or a list of tasks
@@ -102,6 +159,7 @@ def task_put(task_id=None):
 
 @app.post("/task")
 @app.post("/task/<task_id:int>")
+@is_auth
 def task_post(task_id=None):
     """ Insert a new task.
     :return: jsend JSON object with key 'data' containing the task_id of newly created task
@@ -167,4 +225,5 @@ def task_delete(task_id=None):
 app = SessionMiddleware(app, _session_opts)
 
 if __name__ == "__main__":
-    app.app.run(host="0.0.0.0", port=8000, debug=True, reloader=True)
+    run(app=app, host="0.0.0.0", port=8000)
+    # app.app.run(host="0.0.0.0", port=8000, debug=True, reloader=True)
