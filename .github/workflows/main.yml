@@ -31,4 +31,4 @@ jobs:
           python-root: '.'
           flake8-flags: ''
           mypy-flags: ''
-          fail-on-flake8: false
+          skip-flake8: false
