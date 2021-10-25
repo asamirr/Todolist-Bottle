@@ -5,8 +5,10 @@ import db
 
 def connect(database=":memory:", script="todo.sql"):
     """ Open a connection to an SQLite database.
-    :param database: full path plus database file name, use :memory: for in-memory database
-    :param script: SQL commands to create the database if it does not exist (like with :memory:)
+    :param database: full path plus database file name,
+                     use :memory: for in-memory database
+    :param script: SQL commands to create the database 
+                    if it does not exist (like with :memory:)
     :return: None
     :raises: PermissionError - no read and/or write access
              DatabaseError - not a valid SQLite database
@@ -32,3 +34,4 @@ def connect(database=":memory:", script="todo.sql"):
     if is_new_database:
         with open(script, "r") as file:
             db.connection.executescript(file.read())
+            

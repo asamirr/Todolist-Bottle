@@ -3,10 +3,12 @@ import db
 
 def select(id=None):
     if id is None:
-        sql = """SELECT id, summary, description, duedate, status_id, modified FROM task;"""
+        sql = """SELECT id, summary, description, duedate, status_id, modified 
+                FROM task;"""
         return db.connection.execute(sql).fetchall()
     else:
-        sql = """SELECT id, summary, description, duedate, status_id, modified FROM task WHERE id = ?1;"""
+        sql = """SELECT id, summary, description, duedate, status_id, modified 
+                FROM task WHERE id = ?1;"""
         return db.connection.execute(sql, (id,)).fetchone()
 
 

@@ -21,6 +21,7 @@ _session_opts = {"session.type": "file", "session.data_dir": "./data", "session.
 def get_session():
     return request.environ.get("beaker.session")
 
+
 @app.route("/start")
 def start():
     state = str(uuid4()).replace("-", "")
@@ -44,7 +45,8 @@ def start():
 def callback():
     session = get_session()
     data = request.query.get("signedAttempt")
-    res = requests.post(f"{OAUTH_URL}/verify", data={"signedAttempt": data, "state": session.get("state")})
+    res = requests.post(f"{OAUTH_URL}/verify", 
+                        data={"signedAttempt": data, "state": session.get("state")})
     res.raise_for_status()
     session['authorized'] = True
     return redirect('http://localhost:8080/')
@@ -53,7 +55,7 @@ def callback():
 def is_auth(func):
     def wrapper(*args):
         session = get_session()
-        if not session.get("authorized","") :
+        if not session.get("authorized", ""):
             return redirect(f"http://localhost:8000/start", code=302)
         else:
             return func(*args)
@@ -67,14 +69,13 @@ _allow_headers = 'Authorization, Origin, Accept, Content-Type, X-Requested-With'
 @app.hook('after_request')
 def enable_cors():
     '''Add headers to enable CORS'''
-
     response.headers['Access-Control-Allow-Origin'] = _allow_origin
     response.headers['Access-Control-Allow-Methods'] = _allow_methods
     response.headers['Access-Control-Allow-Headers'] = _allow_headers
 
-@app.route('/', method = 'OPTIONS')
-@app.route('/<path:path>', method = 'OPTIONS')
-def options_handler(path = None):
+@app.route('/', method='OPTIONS')
+@app.route('/<path:path>', method='OPTIONS')
+def options_handler(path=None):
     return
 
 
@@ -219,3 +220,4 @@ app = SessionMiddleware(app, _session_opts)
 if __name__ == "__main__":
     run(app=app, host="0.0.0.0", port=8000)
     # app.app.run(host="0.0.0.0", port=8000, debug=True, reloader=True)
+    
