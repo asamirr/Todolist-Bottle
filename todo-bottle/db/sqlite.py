@@ -2,6 +2,7 @@ import sqlite3
 
 import db
 
+
 def connect(database=":memory:", script="todo.sql"):
     """ Open a connection to an SQLite database.
     :param database: full path plus database file name,
