@@ -29,7 +29,9 @@ def error(message=None, code=None, data=None):
 
 
 def json_serialize(obj):
-    """ JSON serializer for objects not serializable by default by json.dumps. """
+    """ 
+    JSON serializer for objects not serializable 
+    by default by json.dumps. """
 
     if isinstance(obj, datetime):
         return obj.isoformat()
