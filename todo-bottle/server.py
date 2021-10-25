@@ -1,33 +1,25 @@
-from bottle import Bottle, request, response, route, hook, run
-from bottle_cors_plugin import cors_plugin
-from beaker.middleware import SessionMiddleware
-
+from bottle import Bottle, request, response, redirect, run
 import db
 import jsend
 import requests
-import os
-from bottle import Bottle, redirect, request, run
 from urllib.parse import urlencode
 import json
 from beaker.middleware import SessionMiddleware
 from uuid import uuid4
 
-from requests.sessions import session
 
-OAUTH_URL = "http://127.0.0.1:9000" # from the server running from proxy_server_3bot.py
+# from the server running from proxy_server_3bot.py
+OAUTH_URL = "http://127.0.0.1:9000"
 REDIRECT_URL = "https://login.threefold.me"
-
 
 
 app = Bottle()
 db.connect("todo.db")
-
 _session_opts = {"session.type": "file", "session.data_dir": "./data", "session.auto": True}
 
 
 def get_session():
     return request.environ.get("beaker.session")
-
 
 @app.route("/start")
 def start():
