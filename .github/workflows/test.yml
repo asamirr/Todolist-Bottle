@@ -37,5 +37,5 @@ jobs:
         working-directory: todo-bottle
 
       - name: Test with pytest
-        run: pytest -vv
+        run: pytest test.py
         working-directory: todo-bottle/tests
