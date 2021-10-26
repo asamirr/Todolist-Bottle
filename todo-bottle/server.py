@@ -7,7 +7,6 @@ import json
 from beaker.middleware import SessionMiddleware
 from uuid import uuid4
 
-
 # from the server running from proxy_server_3bot.py
 OAUTH_URL = "http://127.0.0.1:9000"
 REDIRECT_URL = "https://login.threefold.me"
@@ -81,7 +80,6 @@ def options_handler(path=None):
 
 @app.get("/task")
 @app.get("/task/<task_id:int>")
-@is_auth
 def task_get(task_id=None):
     """ Fetch a single task or fetch all tasks.
     :return: jsend JSON object with key 'data' containing a single or a list of tasks
@@ -152,7 +150,6 @@ def task_put(task_id=None):
 
 @app.post("/task")
 @app.post("/task/<task_id:int>")
-@is_auth
 def task_post(task_id=None):
     """ Insert a new task.
     :return: jsend JSON object with key 'data' containing the task_id of newly created task
