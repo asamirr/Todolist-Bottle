@@ -36,6 +36,6 @@ jobs:
           pip install -r requirements.txt
         working-directory: todo-bottle
 
-      - name: Test with pytest
-        run: pytest test.py
+      - name: Test with unittest
+        run: python test.py
         working-directory: todo-bottle/tests
