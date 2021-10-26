@@ -1,4 +1,3 @@
-import sys
 from server import task_get, task_post
 
 import unittest
